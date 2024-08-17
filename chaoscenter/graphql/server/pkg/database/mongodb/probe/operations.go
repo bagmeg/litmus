@@ -71,6 +71,9 @@ func UpdateProbes(ctx context.Context, query bson.D, updateQuery bson.D) (*mongo
 func GetProbeByName(ctx context.Context, probeName string, projectID string) (Probe, error) {
 	var probe Probe
 	result, err := mongodb.Operator.Get(ctx, mongodb.ChaosProbeCollection, bson.D{{"name", probeName}, {"project_id", projectID}, {"is_removed", false}})
+	if err != nil {
+		return Probe{}, err
+	}
 	err = result.Decode(&probe)
 	if err != nil {
 		return Probe{}, err
